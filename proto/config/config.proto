@@ -1,0 +1,82 @@
+syntax = "proto3";
+
+import "github.com/micro/go-platform/config/proto/config.proto";
+
+service Config {
+	rpc Create(CreateRequest) returns (CreateResponse) {}
+	rpc Update(UpdateRequest) returns (UpdateResponse) {}
+	rpc Delete(DeleteRequest) returns (DeleteResponse) {}
+	rpc Search(SearchRequest) returns (SearchResponse) {}
+	rpc Read(ReadRequest) returns (ReadResponse) {}
+	rpc ReadLog(ReadLogRequest) returns (ReadLogResponse) {}
+}
+
+message Change {
+	string id = 1;
+	string path = 2;
+	string author = 3;
+	string comment = 4;
+	int64 timestamp = 5;
+	ChangeSet set = 6;
+}
+
+message ChangeLog {
+	string action = 1;
+	Change change = 2;
+}
+
+message CreateRequest {
+	Change change = 1;
+}
+
+message CreateResponse {
+}
+
+message UpdateRequest {
+	Change change = 1;
+}
+
+message UpdateResponse {
+}
+
+message DeleteRequest {
+	Change change = 1;
+}
+
+message DeleteResponse {
+}
+
+message ReadRequest {
+	string id = 1;
+	string path = 2;
+}
+
+message ReadResponse {
+	Change change = 1;
+}
+
+message SearchRequest {
+	string id = 1;
+	string author = 2;
+	int64 limit = 3;
+	int64 offset = 4;
+}
+
+message SearchResponse {
+	repeated Change changes = 1;
+}
+
+message ReadLogRequest {
+	// from unix timestamp
+	int64 from = 1;
+	// to unix timestamp
+	int64 to = 2;
+	// limit number items
+	int64 limit = 3;
+	// the offset
+	int64 offset = 4;
+}
+
+message ReadLogResponse {
+	repeated ChangeLog changes = 1;
+}
