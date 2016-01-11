@@ -8,7 +8,7 @@ service Config {
 	rpc Delete(DeleteRequest) returns (DeleteResponse) {}
 	rpc Search(SearchRequest) returns (SearchResponse) {}
 	rpc Read(ReadRequest) returns (ReadResponse) {}
-	rpc ReadLog(ReadLogRequest) returns (ReadLogResponse) {}
+	rpc AuditLog(AuditLogRequest) returns (AuditLogResponse) {}
 }
 
 message Change {
@@ -17,7 +17,7 @@ message Change {
 	string author = 3;
 	string comment = 4;
 	int64 timestamp = 5;
-	ChangeSet set = 6;
+	ChangeSet change_set = 6;
 }
 
 message ChangeLog {
@@ -63,10 +63,10 @@ message SearchRequest {
 }
 
 message SearchResponse {
-	repeated Change changes = 1;
+	repeated Change configs = 1;
 }
 
-message ReadLogRequest {
+message AuditLogRequest {
 	// from unix timestamp
 	int64 from = 1;
 	// to unix timestamp
@@ -77,6 +77,6 @@ message ReadLogRequest {
 	int64 offset = 4;
 }
 
-message ReadLogResponse {
+message AuditLogResponse {
 	repeated ChangeLog changes = 1;
 }

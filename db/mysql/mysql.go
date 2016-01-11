@@ -89,7 +89,7 @@ func (m *mysql) Init() error {
 	}
 
 	for query, statement := range changeQ {
-		prepared, err := d.Prepare(fmt.Sprintf(statement, database, "changes"))
+		prepared, err := d.Prepare(fmt.Sprintf(statement, database, "configs"))
 		if err != nil {
 			return err
 		}
@@ -117,10 +117,10 @@ func (m *mysql) Create(change *proto.Change) error {
 		change.Author,
 		change.Comment,
 		change.Timestamp,
-		change.Set.Timestamp,
-		change.Set.Checksum,
-		change.Set.Data,
-		change.Set.Source,
+		change.ChangeSet.Timestamp,
+		change.ChangeSet.Checksum,
+		change.ChangeSet.Data,
+		change.ChangeSet.Source,
 	)
 	if err != nil {
 		return err
@@ -134,10 +134,10 @@ func (m *mysql) Create(change *proto.Change) error {
 		change.Author,
 		change.Comment,
 		change.Timestamp,
-		change.Set.Timestamp,
-		change.Set.Checksum,
-		change.Set.Data,
-		change.Set.Source,
+		change.ChangeSet.Timestamp,
+		change.ChangeSet.Checksum,
+		change.ChangeSet.Data,
+		change.ChangeSet.Source,
 	)
 	if err != nil {
 		return err
@@ -152,7 +152,7 @@ func (m *mysql) Read(id string) (*proto.Change, error) {
 	}
 
 	change := &proto.Change{
-		Set: &proto2.ChangeSet{},
+		ChangeSet: &proto2.ChangeSet{},
 	}
 
 	r := st["read"].QueryRow(id)
@@ -162,10 +162,10 @@ func (m *mysql) Read(id string) (*proto.Change, error) {
 		&change.Author,
 		&change.Comment,
 		&change.Timestamp,
-		&change.Set.Timestamp,
-		&change.Set.Checksum,
-		&change.Set.Data,
-		&change.Set.Source,
+		&change.ChangeSet.Timestamp,
+		&change.ChangeSet.Checksum,
+		&change.ChangeSet.Data,
+		&change.ChangeSet.Source,
 	); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, errors.New("not found")
@@ -190,10 +190,10 @@ func (m *mysql) Delete(change *proto.Change) error {
 		change.Author,
 		change.Comment,
 		change.Timestamp,
-		change.Set.Timestamp,
-		change.Set.Checksum,
-		change.Set.Data,
-		change.Set.Source,
+		change.ChangeSet.Timestamp,
+		change.ChangeSet.Checksum,
+		change.ChangeSet.Data,
+		change.ChangeSet.Source,
 	)
 	if err != nil {
 		return err
@@ -207,10 +207,10 @@ func (m *mysql) Update(change *proto.Change) error {
 		change.Author,
 		change.Comment,
 		change.Timestamp,
-		change.Set.Timestamp,
-		change.Set.Checksum,
-		change.Set.Data,
-		change.Set.Source,
+		change.ChangeSet.Timestamp,
+		change.ChangeSet.Checksum,
+		change.ChangeSet.Data,
+		change.ChangeSet.Source,
 		change.Id,
 	)
 	if err != nil {
@@ -225,10 +225,10 @@ func (m *mysql) Update(change *proto.Change) error {
 		change.Author,
 		change.Comment,
 		change.Timestamp,
-		change.Set.Timestamp,
-		change.Set.Checksum,
-		change.Set.Data,
-		change.Set.Source,
+		change.ChangeSet.Timestamp,
+		change.ChangeSet.Checksum,
+		change.ChangeSet.Data,
+		change.ChangeSet.Source,
 	)
 	if err != nil {
 		return err
@@ -260,7 +260,7 @@ func (m *mysql) Search(id, author string, limit, offset int64) ([]*proto.Change,
 
 	for r.Next() {
 		change := &proto.Change{
-			Set: &proto2.ChangeSet{},
+			ChangeSet: &proto2.ChangeSet{},
 		}
 		if err := r.Scan(
 			&change.Id,
@@ -268,10 +268,10 @@ func (m *mysql) Search(id, author string, limit, offset int64) ([]*proto.Change,
 			&change.Author,
 			&change.Comment,
 			&change.Timestamp,
-			&change.Set.Timestamp,
-			&change.Set.Checksum,
-			&change.Set.Data,
-			&change.Set.Source,
+			&change.ChangeSet.Timestamp,
+			&change.ChangeSet.Checksum,
+			&change.ChangeSet.Data,
+			&change.ChangeSet.Source,
 		); err != nil {
 			if err == sql.ErrNoRows {
 				return nil, errors.New("not found")
@@ -288,7 +288,7 @@ func (m *mysql) Search(id, author string, limit, offset int64) ([]*proto.Change,
 	return changes, nil
 }
 
-func (m *mysql) ReadLog(from, to, limit, offset int64) ([]*proto.ChangeLog, error) {
+func (m *mysql) AuditLog(from, to, limit, offset int64) ([]*proto.ChangeLog, error) {
 	var r *sql.Rows
 	var err error
 
@@ -310,7 +310,7 @@ func (m *mysql) ReadLog(from, to, limit, offset int64) ([]*proto.ChangeLog, erro
 
 		log := &proto.ChangeLog{
 			Change: &proto.Change{
-				Set: &proto2.ChangeSet{},
+				ChangeSet: &proto2.ChangeSet{},
 			},
 		}
 		if err := r.Scan(
@@ -321,10 +321,10 @@ func (m *mysql) ReadLog(from, to, limit, offset int64) ([]*proto.ChangeLog, erro
 			&log.Change.Author,
 			&log.Change.Comment,
 			&log.Change.Timestamp,
-			&log.Change.Set.Timestamp,
-			&log.Change.Set.Checksum,
-			&log.Change.Set.Data,
-			&log.Change.Set.Source,
+			&log.Change.ChangeSet.Timestamp,
+			&log.Change.ChangeSet.Checksum,
+			&log.Change.ChangeSet.Data,
+			&log.Change.ChangeSet.Source,
 		); err != nil {
 			if err == sql.ErrNoRows {
 				return nil, errors.New("not found")

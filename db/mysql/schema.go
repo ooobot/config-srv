@@ -2,7 +2,7 @@ package mysql
 
 var (
 	changeSchema = `
-CREATE TABLE IF NOT EXISTS changes (
+CREATE TABLE IF NOT EXISTS configs (
 id varchar(255) not null primary key,
 path text,
 author varchar(255),

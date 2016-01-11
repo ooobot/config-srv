@@ -13,7 +13,7 @@ type DB interface {
 	Update(*proto.Change) error
 	Delete(*proto.Change) error
 	Search(id, author string, limit, offset int64) ([]*proto.Change, error)
-	ReadLog(from, to int64, limit, offset int64) ([]*proto.ChangeLog, error)
+	AuditLog(from, to int64, limit, offset int64) ([]*proto.ChangeLog, error)
 }
 
 var (
@@ -50,6 +50,6 @@ func Search(id, author string, limit, offset int64) ([]*proto.Change, error) {
 	return db.Search(id, author, limit, offset)
 }
 
-func ReadLog(from, to, limit, offset int64) ([]*proto.ChangeLog, error) {
-	return db.ReadLog(from, to, limit, offset)
+func AuditLog(from, to, limit, offset int64) ([]*proto.ChangeLog, error) {
+	return db.AuditLog(from, to, limit, offset)
 }
