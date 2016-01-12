@@ -113,6 +113,8 @@ func (c *Config) Create(ctx context.Context, req *proto.CreateRequest, rsp *prot
 		return errors.InternalServerError("go.micro.srv.config.Create", err.Error())
 	}
 
+	config.Publish(ctx, &proto.WatchResponse{Id: req.Change.Id, ChangeSet: req.Change.ChangeSet})
+
 	return nil
 }
 
@@ -199,6 +201,8 @@ func (c *Config) Update(ctx context.Context, req *proto.UpdateRequest, rsp *prot
 		return errors.InternalServerError("go.micro.srv.config.Update", err.Error())
 	}
 
+	config.Publish(ctx, &proto.WatchResponse{Id: req.Change.Id, ChangeSet: req.Change.ChangeSet})
+
 	return nil
 }
 
@@ -272,6 +276,8 @@ func (c *Config) Delete(ctx context.Context, req *proto.DeleteRequest, rsp *prot
 		return errors.InternalServerError("go.micro.srv.config.Delete", err.Error())
 	}
 
+	config.Publish(ctx, &proto.WatchResponse{Id: req.Change.Id, ChangeSet: req.Change.ChangeSet})
+
 	return nil
 }
 
@@ -297,6 +303,31 @@ func (c *Config) Search(ctx context.Context, req *proto.SearchRequest, rsp *prot
 	}
 
 	return nil
+}
+
+func (c *Config) Watch(ctx context.Context, req *proto.WatchRequest, stream proto.Config_WatchStream) error {
+	if len(req.Id) == 0 {
+		return errors.BadRequest("go.micro.srv.config.Watch", "invalid id")
+	}
+
+	watch, err := config.Watch(req.Id)
+	if err != nil {
+		return errors.InternalServerError("go.micro.srv.config.Watch", err.Error())
+	}
+	defer watch.Stop()
+
+	for {
+		ch, err := watch.Next()
+		if err != nil {
+			stream.Close()
+			return errors.InternalServerError("go.micro.srv.config.Watch", err.Error())
+		}
+
+		if err := stream.Send(ch); err != nil {
+			stream.Close()
+			return errors.InternalServerError("go.micro.srv.config.Watch", err.Error())
+		}
+	}
 }
 
 func (c *Config) AuditLog(ctx context.Context, req *proto.AuditLogRequest, rsp *proto.AuditLogResponse) error {

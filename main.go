@@ -38,6 +38,9 @@ func main() {
 
 	proto.RegisterConfigHandler(service.Server(), new(handler.Config))
 
+	// subcriber to watches
+	service.Server().Subscribe(service.Server().NewSubscriber(config.WatchTopic, config.Watcher))
+
 	if err := config.Init(); err != nil {
 		log.Fatal(err)
 	}

@@ -9,6 +9,7 @@ service Config {
 	rpc Search(SearchRequest) returns (SearchResponse) {}
 	rpc Read(ReadRequest) returns (ReadResponse) {}
 	rpc AuditLog(AuditLogRequest) returns (AuditLogResponse) {}
+	rpc Watch(WatchRequest) returns (stream WatchResponse) {}
 }
 
 message Change {
@@ -64,6 +65,15 @@ message SearchRequest {
 
 message SearchResponse {
 	repeated Change configs = 1;
+}
+
+message WatchRequest {
+	string id = 1;
+}
+
+message WatchResponse {
+	string id = 1;
+	ChangeSet change_set = 2;
 }
 
 message AuditLogRequest {
