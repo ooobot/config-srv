@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+package go.micro.srv.config.config;
+
 import "github.com/micro/go-platform/config/proto/config.proto";
 
 service Config {
