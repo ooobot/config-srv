@@ -20,7 +20,7 @@ message Change {
 	string author = 3;
 	string comment = 4;
 	int64 timestamp = 5;
-	ChangeSet change_set = 6;
+	go.micro.platform.config.ChangeSet change_set = 6;
 }
 
 message ChangeLog {
@@ -75,7 +75,7 @@ message WatchRequest {
 
 message WatchResponse {
 	string id = 1;
-	ChangeSet change_set = 2;
+	go.micro.platform.config.ChangeSet change_set = 2;
 }
 
 message AuditLogRequest {
@@ -87,6 +87,8 @@ message AuditLogRequest {
 	int64 limit = 3;
 	// the offset
 	int64 offset = 4;
+	// reverse the order
+	bool reverse = 5;
 }
 
 message AuditLogResponse {

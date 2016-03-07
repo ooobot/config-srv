@@ -42,6 +42,10 @@ var (
 				from %s.%s limit ? offset ?`,
 		"readBetween": `SELECT pid, action, id, path, author, comment, timestamp, changeset_timestamp, changeset_checksum, changeset_data, changeset_source 
 				from %s.%s where timestamp >= ? and timestamp <= ? limit ? offset ?`,
+		"readLogDesc": `SELECT pid, action, id, path, author, comment, timestamp, changeset_timestamp, changeset_checksum, changeset_data, changeset_source 
+				from %s.%s order by pid desc limit ? offset ?`,
+		"readBetweenDesc": `SELECT pid, action, id, path, author, comment, timestamp, changeset_timestamp, changeset_checksum, changeset_data, changeset_source 
+				from %s.%s where timestamp >= ? and timestamp <= ? order by pid desc limit ? offset ?`,
 	}
 
 	st = map[string]*sql.Stmt{}
@@ -288,14 +292,22 @@ func (m *mysql) Search(id, author string, limit, offset int64) ([]*proto.Change,
 	return changes, nil
 }
 
-func (m *mysql) AuditLog(from, to, limit, offset int64) ([]*proto.ChangeLog, error) {
+func (m *mysql) AuditLog(from, to, limit, offset int64, reverse bool) ([]*proto.ChangeLog, error) {
 	var r *sql.Rows
 	var err error
 
 	if from == 0 && to == 0 {
-		r, err = st["readLog"].Query(limit, offset)
+		q := "readLog"
+		if reverse {
+			q += "Desc"
+		}
+		r, err = st[q].Query(limit, offset)
 	} else {
-		r, err = st["readBetween"].Query(from, to, limit, offset)
+		q := "readBetween"
+		if reverse {
+			q += "Desc"
+		}
+		r, err = st[q].Query(from, to, limit, offset)
 	}
 
 	if err != nil {

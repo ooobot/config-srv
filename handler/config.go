@@ -27,12 +27,11 @@ func (c *Config) Read(ctx context.Context, req *proto.ReadRequest, rsp *proto.Re
 	}
 
 	// Set response
-	rsp.Change = &proto.Change{
-		Id:        ch.Id,
-		ChangeSet: ch.ChangeSet,
-	}
+	rsp.Change = ch
 
 	if len(req.Path) == 0 {
+		rsp.Change.Path = ""
+		rsp.Change.Timestamp = 0
 		return nil
 	}
 
@@ -296,10 +295,9 @@ func (c *Config) Search(ctx context.Context, req *proto.SearchRequest, rsp *prot
 	}
 
 	for _, ch := range changes {
-		rsp.Configs = append(rsp.Configs, &proto.Change{
-			Id:        ch.Id,
-			ChangeSet: ch.ChangeSet,
-		})
+		ch.Path = ""
+		ch.Timestamp = 0
+		rsp.Configs = append(rsp.Configs, ch)
 	}
 
 	return nil
@@ -347,7 +345,7 @@ func (c *Config) AuditLog(ctx context.Context, req *proto.AuditLogRequest, rsp *
 		req.To = 0
 	}
 
-	logs, err := db.AuditLog(req.From, req.To, req.Limit, req.Offset)
+	logs, err := db.AuditLog(req.From, req.To, req.Limit, req.Offset, req.Reverse)
 	if err != nil {
 		return errors.InternalServerError("go.micro.srv.config.AuditLog", err.Error())
 	}
