@@ -8,8 +8,8 @@ import (
 	"github.com/micro/config-srv/db"
 	proto "github.com/micro/config-srv/proto/config"
 	"github.com/micro/go-micro/errors"
-	conf "github.com/micro/go-platform/config"
-	proto2 "github.com/micro/go-platform/config/proto"
+	conf "github.com/micro/go-os/config"
+	proto2 "github.com/micro/go-os/config/proto"
 
 	"golang.org/x/net/context"
 )

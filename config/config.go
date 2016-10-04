@@ -6,14 +6,14 @@ import (
 	"time"
 
 	"github.com/micro/go-micro/client"
-	"github.com/micro/go-platform/config"
+	"github.com/micro/go-os/config"
 
 	proto "github.com/micro/config-srv/proto/config"
 	"golang.org/x/net/context"
 )
 
 var (
-	// We need a path splitter since its structured in go-platform
+	// We need a path splitter since its structured in go-os
 	PathSplitter = "/"
 	WatchTopic   = "micro.config.watch"
 

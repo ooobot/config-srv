@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package go.micro.srv.config.config;
 
-import "github.com/micro/go-platform/config/proto/config.proto";
+import "github.com/micro/go-os/config/proto/config.proto";
 
 service Config {
 	rpc Create(CreateRequest) returns (CreateResponse) {}
@@ -20,7 +20,7 @@ message Change {
 	string author = 3;
 	string comment = 4;
 	int64 timestamp = 5;
-	go.micro.platform.config.ChangeSet change_set = 6;
+	go.micro.os.config.ChangeSet change_set = 6;
 }
 
 message ChangeLog {
@@ -75,7 +75,7 @@ message WatchRequest {
 
 message WatchResponse {
 	string id = 1;
-	go.micro.platform.config.ChangeSet change_set = 2;
+	go.micro.os.config.ChangeSet change_set = 2;
 }
 
 message AuditLogRequest {

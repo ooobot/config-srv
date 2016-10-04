@@ -1,6 +1,6 @@
 # Config Server
 
-Config server is a microservice to store dynamic configuration. It can be used with the go-platform.
+Config server is a microservice to store dynamic configuration. It can be used with the go-os.
 
 ## Getting started
 

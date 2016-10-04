@@ -8,7 +8,7 @@ import (
 
 	"github.com/micro/config-srv/db"
 	proto "github.com/micro/config-srv/proto/config"
-	proto2 "github.com/micro/go-platform/config/proto"
+	proto2 "github.com/micro/go-os/config/proto"
 
 	_ "github.com/go-sql-driver/mysql"
 )
