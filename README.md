@@ -19,14 +19,14 @@ Config server is a microservice to store dynamic configuration. It can be used w
 4. Download and start the service
 
 	```shell
-	go get github.com/micro/config-srv
-	config-srv --database_url="root:root@tcp(192.168.99.100:3306)/config"
+	$ go get github.com/micro/config-srv
+	$ config-srv --database_url="root:root@tcp(192.168.99.100:3306)/config"
 	```
 
 	OR as a docker container
 
 	```shell
-	docker run microhq/config-srv --database_url="root:root@tcp(192.168.99.100:3306)/config" --registry_address=YOUR_REGISTRY_ADDRESS
+	$ docker run microhq/config-srv --database_url="root:root@tcp(192.168.99.100:3306)/config" --registry_address=YOUR_REGISTRY_ADDRESS
 	```
 
 ## The API
@@ -39,13 +39,13 @@ Config
 - Delete
 - Search
 - AuditLog
+- Watch
 
 
 ### Config.Create
 Create a record with id "NAMESPACE:CONFIG" at the path "supported_phones"
 ```shell
-micro query go.micro.srv.config Config.Create 
-'{
+$ micro query go.micro.srv.config Config.Create '{
 	"change": {
 		"id": "NAMESPACE:CONFIG",
 		"path": "supported_phones",
@@ -60,7 +60,8 @@ micro query go.micro.srv.config Config.Create
 ### Config.Read
 Read record with id "NAMESPACE:CONFIG"
 ```shell
-micro query go.micro.srv.config Config.Read '{"id": "NAMESPACE:CONFIG"}'
+$ micro query go.micro.srv.config Config.Read '{"id": "NAMESPACE:CONFIG"}'
+
 {
 	"change": {
 		"change_set": {
@@ -79,7 +80,7 @@ micro query go.micro.srv.config Config.Read '{"id": "NAMESPACE:CONFIG"}'
 Update record id "NAMESPACE:CONFIG" path "supported_phones/android" with android phones
 
 ```shell
-micro query go.micro.srv.config Config.Update '{
+$ micro query go.micro.srv.config Config.Update '{
 	"change": {
 		"id": "NAMESPACE:CONFIG",
 		"path": "supported_phones/android",
@@ -94,7 +95,8 @@ micro query go.micro.srv.config Config.Update '{
 
 Search for configs
 ```shell
-micro query go.micro.srv.config Config.Search 
+$ micro query go.micro.srv.config Config.Search
+
 {
 	"configs": [
 		{
@@ -114,7 +116,7 @@ micro query go.micro.srv.config Config.Search
 Delete the ios config
 
 ```shell
-micro query go.micro.srv.config Config.Delete '{
+$ micro query go.micro.srv.config Config.Delete '{
 		"change": {
 			"id": "NAMESPACE:CONFIG",
 			"path": "supported_phones/ios",
@@ -129,6 +131,8 @@ micro query go.micro.srv.config Config.Delete '{
 Read the audit log
 
 ```shell
+$ micro query go.micro.srv.config Config.AuditLog
+
 {
 	"changes": [
 		{
@@ -182,3 +186,23 @@ Read the audit log
 	]
 }
 ```
+
+### Config.Watch
+
+Watch the config changes, meanwhile update the config in another terminal.
+
+```shell
+$ micro stream go.micro.srv.config Config.Watch '{"id": "NAMESPACE:CONFIG"}'
+
+{
+	"change_set": {
+		"checksum": "95d998cdd93099c6",
+		"data": "{\"supported_phones\":{\"android\":[\"galaxy nexus\",\"nexus 5\"]}}",
+		"source": "json",
+		"timestamp": 1.479574682e+09
+	},
+	"id": "NAMESPACE:CONFIG"
+}
+
+```
+
