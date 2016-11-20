@@ -39,6 +39,7 @@ Config
 - Delete
 - Search
 - AuditLog
+- Watch
 
 
 ### Config.Create
@@ -185,3 +186,23 @@ $ micro query go.micro.srv.config Config.AuditLog
 	]
 }
 ```
+
+### Config.Watch
+
+Watch the config changes, meanwhile update the config in another terminal.
+
+```shell
+$ micro stream go.micro.srv.config Config.Watch '{"id": "NAMESPACE:CONFIG"}'
+
+{
+	"change_set": {
+		"checksum": "95d998cdd93099c6",
+		"data": "{\"supported_phones\":{\"android\":[\"galaxy nexus\",\"nexus 5\"]}}",
+		"source": "json",
+		"timestamp": 1.479574682e+09
+	},
+	"id": "NAMESPACE:CONFIG"
+}
+
+```
+
